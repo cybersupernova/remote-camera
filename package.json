@@ -6,5 +6,15 @@
   "repository": "https://github.com/cybersupernova/remote-camera",
   "author": "Rupesh Pandey",
   "license": "MIT",
-  "private": false
+  "private": false,
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "@hapi/hapi": "^19.1.1",
+    "@hapi/vision": "^6.0.0",
+    "pug": "^3.0.0",
+    "socket.io": "^2.3.0"
+  }
 }
