@@ -16,22 +16,12 @@ const init = async () => {
 		}
 	});
 	await server.register(Vision);
-	await server.register(Inert);
 	server.views({
 		engines: { pug },
 		relativeTo: __dirname,
 		path: 'templates'
 	});
-
-	let io = IO(server.listener)
-	io.on("connection", function (socket) {
-
-		console.log('connected');
-
-		// Do all the socket stuff here.
-
-	})
-
+	await server.register(Inert);
 	server.route({
 		method: 'GET',
 		path: '/{param*}',
@@ -41,6 +31,21 @@ const init = async () => {
 			}
 		}
 	});
+
+	let io = IO(server.listener)
+	io.on("connection", function (socket) {
+
+		console.log('connected');
+		socket.on('REGISTER', name => {
+			socket.name = name
+			console.log(`name registered as ${name}`)
+		})
+		socket.on('disconnect', () => {
+			console.log('user disconnected');
+		});
+
+	})
+
 	server.route({
 		method: 'GET',
 		path: '/',
