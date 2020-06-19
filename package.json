@@ -1,7 +1,7 @@
 {
   "name": "remote-camera",
   "version": "0.1",
-  "description": "An WebRTC based web app which show the recording preview on another device",
+  "description": "A WebRTC based web app which show the recording preview on another device.",
   "main": "index.js",
   "repository": "https://github.com/cybersupernova/remote-camera",
   "author": "Rupesh Pandey",
