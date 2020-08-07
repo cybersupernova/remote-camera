@@ -3,19 +3,22 @@
     <Setup @complete="showPreview" v-if="!setup" />
     <p v-if="setup">RoomId: {{ roomId }}</p>
     <Preview v-if="setup" :stream="localStream" :name="name" />
+    <Members />
   </div>
 </template>
 
 <script>
 import Setup from "./components/Setup";
 import Preview from "./components/Preview";
+import Members from "./components/Members";
 import { mapState } from "vuex";
 
 export default {
   name: "App",
   components: {
     Setup,
-    Preview
+    Preview,
+    Members
   },
   data() {
     return {

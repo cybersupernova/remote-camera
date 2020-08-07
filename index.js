@@ -5,6 +5,8 @@ const pug = require('pug')
 const Path = require('path')
 const Inert = require('@hapi/inert')
 
+const rooms = {}
+
 const init = async () => {
 
 	const server = Hapi.server({
@@ -41,9 +43,17 @@ const init = async () => {
 			socket.name = name
 			socket.join(roomId)
 			console.log(`name registered as ${name} in ${roomId}`)
-			io.sockets.in(socket.roomId).emit('REGISTER', { id: socket.id })
+			if (!rooms[socket.roomId]) rooms[socket.roomId] = []
+			rooms[socket.roomId].push({ id: socket.id, name })
+			io.sockets.in(socket.roomId).emit('REGISTER', { id: socket.id, members: rooms[socket.roomId] })
+		})
+		socket.on('signal', ({ id, signal }) => {
+			io.sockets.in(id).emit('signal', { id: socket.id, signal })
 		})
 		socket.on('disconnect', () => {
+			if (rooms[socket.roomId])
+				rooms[socket.roomId] = rooms[socket.roomId].filter(m => m.id != socket.id)
+			socket.leave(socket.roomId)
 			console.log('user disconnected');
 		});
 
