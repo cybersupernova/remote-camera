@@ -18,6 +18,9 @@ const store = new Vuex.Store({
 		setLocalStream(state, stream) {
 			state.localStream = stream
 		},
+		setRemoteStream(state, { id, stream }) {
+			Vue.set(state.members[id], 'stream', stream)
+		},
 		saveMembers(state, members) {
 			members.forEach(member => {
 				if (!state.members[member.id])
@@ -45,14 +48,19 @@ const store = new Vuex.Store({
 					console.log(`peer signal ===>  ${signal.type} for ${member.id}`)
 					this._vm.$socket.client.emit('signal', { id: member.id, signal })
 				})
-				peer.on('connect', function () {
+				peer.on('connect', () => {
 					console.log('peer connected')
+					peer.addStream(context.state.localStream)
 				})
-				peer.on('close', function () {
+				peer.on('close', () => {
 					console.log('peer closed')
 				})
-				peer.on('error', function (error) {
+				peer.on('error', (error) => {
 					console.log('peer error', error)
+				})
+				peer.on('stream', stream => {
+					console.log('stream received', stream)
+					context.commit('setRemoteStream', { id: member.id, stream })
 				})
 				context.commit('addNewPeer', { id: member.id, peer })
 			})
