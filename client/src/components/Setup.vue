@@ -1,7 +1,10 @@
 <template>
   <div>
     <ValidationObserver slim v-slot="o">
-      <form @submit.prevent="o.handleSubmit(handleForm)">
+      <button type="button" @click="setMode('create')">Create</button>
+      <button type="button" @click="setMode('join')">Join</button>
+
+      <form @submit.prevent="o.handleSubmit(handleForm)" v-if="mode">
         <Input
           v-model="roomId"
           placeholder="Enter RoomID"
@@ -24,7 +27,7 @@
 
 <script>
 import Input from "./base/Input";
-import { mapActions } from "vuex";
+import { mapActions, mapState } from "vuex";
 export default {
   name: "Setup",
   components: { Input },
@@ -34,9 +37,15 @@ export default {
       name: null
     };
   },
+  computed: {
+    ...mapState({
+      mode: "mode"
+    })
+  },
   methods: {
     ...mapActions({
-      saveStream: "saveLocalStream"
+      saveStream: "saveLocalStream",
+      setMode: "setMode"
     }),
     handleForm() {
       console.log(this.name, this.roomId);

@@ -7,7 +7,8 @@
       @click="$emit('changePreview', member)"
     >
       {{member.id}}
-      <Preview v-if="member.stream" :stream="member.stream" :name="member.name" />
+      <Preview v-if="$socket.client.id == member.id" :stream="localStream" :name="member.name" />
+      <Preview v-else :stream="member.stream" :name="member.name" />
     </div>
   </div>
 </template>
@@ -22,7 +23,8 @@ export default {
   },
   computed: {
     ...mapGetters({
-      members: "allMembers"
+      members: "allMembers",
+      localStream: "getLocalStream"
     })
   }
 };

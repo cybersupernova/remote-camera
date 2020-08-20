@@ -54,6 +54,8 @@ const init = async () => {
 			if (rooms[socket.roomId])
 				rooms[socket.roomId] = rooms[socket.roomId].filter(m => m.id != socket.id)
 			socket.leave(socket.roomId)
+			io.sockets.in(socket.roomId).emit('LEAVE', { id: socket.id })
+
 			console.log('user disconnected');
 		});
 

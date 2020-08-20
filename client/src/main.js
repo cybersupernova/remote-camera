@@ -6,7 +6,7 @@ import './vee-validate'
 import store from './store'
 
 
-Vue.use(VueSocketIOExt, io('http://localhost:3000'), { store, actionPrefix: 'socket_', mutationPrefix: 'socket_' });
+Vue.use(VueSocketIOExt, io('https://recorder.cyberoze.com/api'), { store, actionPrefix: 'socket_', mutationPrefix: 'socket_' });
 
 new Vue({
   store,
