@@ -11,11 +11,11 @@ const init = async () => {
 
 	const server = Hapi.server({
 		port: 3000,
-		// routes: {
-		// 	files: {
-		// 		relativeTo: Path.join(__dirname, 'public')
-		// 	}
-		// }
+		routes: {
+			files: {
+				relativeTo: Path.join(__dirname, 'client/dist')
+			}
+		}
 	});
 	// await server.register(Vision);
 	// server.views({
@@ -23,16 +23,16 @@ const init = async () => {
 	// 	relativeTo: __dirname,
 	// 	path: 'templates'
 	// });
-	// await server.register(Inert);
-	// server.route({
-	// 	method: 'GET',
-	// 	path: '/{param*}',
-	// 	handler: {
-	// 		directory: {
-	// 			path: '.'
-	// 		}
-	// 	}
-	// });
+	await server.register(Inert);
+	server.route({
+		method: 'GET',
+		path: '/{param*}',
+		handler: {
+			directory: {
+				path: '.'
+			}
+		}
+	});
 
 	let io = IO(server.listener)
 	io.on("connection", function (socket) {
