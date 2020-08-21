@@ -6,7 +6,7 @@ import './vee-validate'
 import store from './store'
 
 
-Vue.use(VueSocketIOExt, io('https://recorder.cyberoze.com/api', { path: '/api/socket.io/', transports: ['polling'] }), { store, actionPrefix: 'socket_', mutationPrefix: 'socket_' });
+Vue.use(VueSocketIOExt, io('https://recorder.cyberoze.com/', { path: '/socket.io/', transports: ['polling'] }), { store, actionPrefix: 'socket_', mutationPrefix: 'socket_' });
 
 new Vue({
   store,
