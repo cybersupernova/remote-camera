@@ -1,6 +1,10 @@
 <template>
   <div>
-    <p>{{name}}</p>
+    <p v-if="!controls">
+      <span v-if="state != 'recording'" @click="startRecording">Record</span>
+      <span v-if="state == 'recording'" @click="stopRecording(true)">Stop</span>
+    </p>
+    <p class="name">{{name}}</p>
     <video ref="video" :controls="controls" muted></video>
   </div>
 </template>
@@ -23,7 +27,13 @@ export default {
     }
   },
   data() {
-    return { recordedChunks: [], recorder: null, seq: 0, timer: null };
+    return {
+      recordedChunks: [],
+      recorder: null,
+      seq: 0,
+      timer: null,
+      state: null
+    };
   },
   computed: {
     ...mapState({ mode: "mode" })
@@ -33,16 +43,16 @@ export default {
       console.log("new stream", value);
       this.$refs.video.srcObject = value;
       this.$refs.video.play();
-      if (!this.recorder || this.recorder.state != "recording")
-        this.startRecording();
+      // if (!this.recorder || this.recorder.state != "recording")
+      //   this.startRecording();
     }
   },
   mounted() {
     this.$refs.video.srcObject = this.stream;
     this.$refs.video.play();
-    if (!this.controls && this.stream) {
-      this.startRecording();
-    }
+    // if (!this.controls && this.stream) {
+    //   this.startRecording();
+    // }
   },
   beforeDestroy() {
     this.stopRecording(true);
@@ -59,13 +69,15 @@ export default {
         });
         this.recorder.ondataavailable = this.handleDataAvailable;
       }
-      this.recorder.start(3000);
+      this.recorder.start(10000);
+      this.state = "recording";
       this.timer = setTimeout(() => {
         this.stopRecording();
-      }, 5 * 60 * 100);
+      }, 5 * 60 * 1000);
     },
     stopRecording(shouldBreak) {
       this.recorder.stop();
+      this.state = "inactive";
       console.log("stopped recording");
       setTimeout(() => {
         this.saveRecording();
@@ -105,18 +117,25 @@ export default {
 div {
   display: flex;
   position: relative;
+  flex-direction: row;
   //   width: 100%;
   //   max-height: 300px;
   // flex-grow:
   p {
     position: absolute;
-    right: 0;
-    bottom: 0;
-    margin: 0;
     padding: 5px;
     background: #cecece;
     border-radius: 10px;
     padding: 5px 10px;
+    z-index: 10;
+    &.name {
+      left: 0;
+      bottom: 0;
+      margin: 0;
+    }
+    span {
+      cursor: pointer;
+    }
   }
   //   video {
   //     height: 300px;
